@@ -36,7 +36,7 @@ class OrbitDash {
         if (!ctx)
             throw new Error("2D canvas context unavailable");
         this.ctx = ctx;
-        this.best = Number(localStorage.getItem("orbitdash_best") ?? 0);
+        this.best = loadBestScore();
         window.addEventListener("resize", () => this.resize());
         this.resize();
         window.addEventListener("keydown", (e) => {
@@ -145,7 +145,7 @@ class OrbitDash {
                     this.shake = 16;
                     if (this.score > this.best) {
                         this.best = this.score;
-                        localStorage.setItem("orbitdash_best", String(this.best));
+                        saveBestScore(this.best);
                     }
                 }
                 else {
@@ -231,6 +231,25 @@ class OrbitDash {
 }
 function lerp(a, b, t) {
     return a + (b - a) * t;
+}
+const BEST_SCORE_KEY = "orbitdash_best";
+function loadBestScore() {
+    try {
+        const raw = localStorage.getItem(BEST_SCORE_KEY);
+        const n = Number(raw);
+        return raw !== null && Number.isFinite(n) ? n : 0;
+    }
+    catch {
+        return 0; // storage blocked (private mode, sandboxed iframe, disabled by user)
+    }
+}
+function saveBestScore(value) {
+    try {
+        localStorage.setItem(BEST_SCORE_KEY, String(value));
+    }
+    catch {
+        // storage blocked — best score just won't persist across reloads this session
+    }
 }
 window.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("game");
