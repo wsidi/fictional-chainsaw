@@ -13,13 +13,18 @@
     touch-action: none;
   }
   #game {
+    position: fixed;
+    inset: 0;
     display: block;
-    width: 100vw;
+    width: 100%;
+    /* 100vh on mobile Safari includes the area behind the browser toolbars,
+       which hid the paddle; dvh tracks the visible viewport. */
     height: 100vh;
+    height: 100dvh;
   }
   #hint {
     position: fixed;
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     text-align: center;

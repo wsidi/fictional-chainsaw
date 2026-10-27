@@ -182,6 +182,8 @@ class OrbitDash {
     this.best = loadBestScore();
 
     window.addEventListener("resize", () => this.resize());
+    // Mobile Safari resizes the visual viewport as its toolbars show/hide.
+    window.visualViewport?.addEventListener("resize", () => this.resize());
     this.resize();
 
     window.addEventListener("keydown", (e) => {
